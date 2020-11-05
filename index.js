@@ -6,14 +6,22 @@
  *   - An error, if any (nullable)
  *   - The IP address as a string (null if error). Example: "162.245.144.188"
  */
-// const { fetchMyIP } = require("./iss");
-// const { fetchCoordsByIp } = require("./iss");
 
-// fetchCoordsByIp("162.245.144.188", (error, coords) => {
-//   if (error) {
-//     console.log("It didn't work!", error);
-//     return;
-//   }
+const { nextISSTimesForMyLocation } = require("./iss");
 
-//   console.log("It worked! Returned Coords:", coords);
-// });
+const printPassTimes = function (passoverTimes) {
+  for (const pass of passoverTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
+
+nextISSTimesForMyLocation((error, passoverTimes) => {
+  if (error) {
+    return console.log("It didn't work!", error);
+  }
+  // success, print out the deets!
+  printPassTimes(passoverTimes);
+});
